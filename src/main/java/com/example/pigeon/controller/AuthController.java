@@ -5,10 +5,19 @@ import com.example.pigeon.dto.UtilisateurDto;
 import com.example.pigeon.entity.Utilisateur;
 import com.example.pigeon.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import static org.bouncycastle.cms.RecipientId.password;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -17,38 +26,46 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/register")
-    public ResponseEntity<UtilisateurDto> registerUtilisateur(@RequestBody UtilisateurDto user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<UtilisateurDto> registerUtilisateur(@RequestBody @Valid UtilisateurDto user) {
+        user.setMotDePasse(passwordEncoder.encode(user.getMotDePasse()));
         UtilisateurDto registeredUtilisateur = userService.registerUtilisateur(user);
         return new ResponseEntity<>(registeredUtilisateur, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequest, HttpSession session) {
-        String username = loginRequest.getUsername();
-        String motDePasse = loginRequest.getMotDePasse();
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto loginRequest) {
+        try {
 
-        if (username == null || motDePasse == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nom d'utilisateur ou mot de passe manquant");
-        }
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getMotDePasse())
+            );
 
-        Utilisateur utilisateur = userService.findByUsernameAndMotDePasse(username, motDePasse);
 
-        if (utilisateur != null) {
-            session.setAttribute("utilisateurId", utilisateur.getId());
-            session.setAttribute("username", utilisateur.getUsername());
-            session.setAttribute("utilisateurRole", utilisateur.getRole());
-            return ResponseEntity.ok("Connexion réussie");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nom d'utilisateur ou mot de passe incorrect");
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            return ResponseEntity.ok("User logged in successfully: " + authentication.getName());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
 
-
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate();
-        return ResponseEntity.ok("Déconnexion réussie");
+    public ResponseEntity<String> logout() {
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok("User logged out successfully");
     }
 
 }
+
+
+
+
+

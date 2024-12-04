@@ -7,6 +7,7 @@
     import com.example.pigeon.repository.UtilisateurRepository;
     import com.example.pigeon.service.UserService;
     import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
 
     import java.util.List;
@@ -16,6 +17,9 @@
 
         @Autowired
         private UtilisateurRepository utilisateurRepository;
+
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
         public Utilisateur findByUsernameAndMotDePasse(String username, String motDePasse) {
             return utilisateurRepository.findByUsernameAndMotDePasse(username, motDePasse);
@@ -30,7 +34,7 @@
                 userDto.setRole(Role.ROLE_USER);
             }
             Utilisateur utilisateur = userDto.toEntity();
-//            utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
+            utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
             Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
             return UtilisateurDto.toDto(savedUtilisateur);
         }
