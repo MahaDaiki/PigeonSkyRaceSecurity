@@ -52,7 +52,7 @@ public class CalculServiceImpl implements CalculService {
         try {
             resultats.forEach(resultat -> {
 
-                Utilisateur utilisateur = utilisateurRepository.findByPigeonId(resultat.getPigeon().getId())
+                Utilisateur utilisateur = utilisateurRepository.findByPigeons_Id(resultat.getPigeon().getId())
                         .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé pour le pigeon : " + resultat.getPigeon().getId()));
 
                 double distanceParcourue = calculerDistanceHaversine(competition.getLatitudeLacher(), competition.getLongitudeLacher(), utilisateur.getLatitude(), utilisateur.getLongitude());

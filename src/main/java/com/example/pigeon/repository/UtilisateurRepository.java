@@ -13,6 +13,8 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     Utilisateur findByUsernameAndMotDePasse(String username, String motDePasse);
     Optional<Utilisateur> findByUsername(String username);
 
-    @Query("{ 'pigeons.$id': ObjectId(?0) }")
-    Optional<Utilisateur> findByPigeonId(Long pigeonId);
+//    @Query("{ 'pigeons.$id': ObjectId(?0) }")
+//    Optional<Utilisateur> findByPigeonId(Long pigeonId);
+
+    Optional<Utilisateur> findByPigeons_Id(Long pigeonId);
 }
