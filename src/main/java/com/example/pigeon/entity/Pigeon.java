@@ -1,6 +1,7 @@
 package com.example.pigeon.entity;
 
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -10,46 +11,49 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
-@Document(collection = "pigeons")
-public class Pigeon {
-    @Id
-    @Getter
-    @Setter
-    private String id;
+import java.util.List;
 
-    @Getter
-    @Setter
+@Data
+@Entity
+@Table(name = "pigeons")
+public class Pigeon {
+    @jakarta.persistence.Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotBlank(message = "Le numéro de bague ne peut pas être vide")
     @Pattern(regexp = "^[mf].*", message = "Le numéro de bague doit commencer par 'm' pour mâle ou 'f' pour femelle")
     private String numeroBague;
 
-    @Getter
-    @Setter
     @NotBlank(message = "La couleur ne peut pas être vide")
     private String couleur;
 
-    @Getter
-    @Setter
+
     @NotBlank(message = "L'age ne peut pas être vide")
     private int age;
 
-    @Getter
-    @Setter
-    @NotNull(message = "L'ID de l'éleveur ne peut pas être nul")
-    private String eleveurId;
 
+    @ManyToOne
+    @JoinColumn(name = "utilisateur_id")
+    private Utilisateur eleveur;
+
+    @OneToMany(mappedBy = "pigeon", cascade = CascadeType.ALL)
+    private List<Resultat> resultats;
 
 
     public Pigeon() {}
 
-    public Pigeon(String numeroBague, String couleur, int age, String eleveurId) {
+    public Pigeon(String numeroBague, String couleur, int age, Utilisateur eleveur, List<Resultat> resultats) {
         this.numeroBague = numeroBague;
         this.couleur = couleur;
         this.age = age;
-        this.eleveurId = eleveurId;
+        this.eleveur = eleveur;
+        this.resultats = resultats;
+
 
     }
+
 
 
 }

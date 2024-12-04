@@ -15,9 +15,9 @@ import java.util.Date;
 @Builder
 public class ResultatDto {
 
-        private String id;
-        private String competitionId;
-        private String pigeonId;
+        private long id;
+        private long competitionId;
+        private long pigeonId;
         private double distanceParcourue;
         private double vitesse;
         private Duration tempsParcourue;
@@ -30,8 +30,8 @@ public class ResultatDto {
     public static ResultatDto toDto(Resultat entity) {
         return ResultatDto.builder()
                 .id(entity.getId())
-                .competitionId(entity.getCompetitionId())
-                .pigeonId(entity.getPigeonId())
+                .competitionId(entity.getCompetition().getId())
+                .pigeonId(entity.getPigeon().getId())
                 .distanceParcourue(entity.getDistanceParcourue())
                 .vitesse(entity.getVitesse())
                 .tempsParcourue(entity.getTempsParcourue())
@@ -41,11 +41,10 @@ public class ResultatDto {
                 .build();
     }
 
+
     public Resultat toEntity() {
         Resultat resultat = new Resultat();
         resultat.setId(this.id);
-        resultat.setCompetitionId(this.competitionId);
-        resultat.setPigeonId(this.pigeonId);
         resultat.setDistanceParcourue(this.distanceParcourue);
         resultat.setVitesse(this.vitesse);
         resultat.setTempsParcourue(this.tempsParcourue);

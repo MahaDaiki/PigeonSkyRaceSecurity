@@ -1,6 +1,7 @@
 package com.example.pigeon.dto;
 
 import com.example.pigeon.entity.Pigeon;
+import com.example.pigeon.entity.Utilisateur;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -8,10 +9,8 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class PigeonDto {
-    private String id;
+    private long  id;
 
     @NotBlank(message = " Le numéro de bague ne peut pas être vide")
     private String numeroBague;
@@ -23,14 +22,10 @@ public class PigeonDto {
     private int age;
 
     @NotNull(message = "L'ID de l'éleveur ne peut pas être nul")
-    private String eleveurId;
+    private Long eleveurId;
 
-    public PigeonDto(String numeroBague, String couleur, int age, String eleveurId) {
-        this.numeroBague = numeroBague;
-        this.couleur = couleur;
-        this.age = age;
-        this.eleveurId = eleveurId;
-    }
+
+
 
     public static PigeonDto toDto(Pigeon pigeon) {
         PigeonDto pigeonDto = new PigeonDto();
@@ -38,9 +33,10 @@ public class PigeonDto {
         pigeonDto.setNumeroBague(pigeon.getNumeroBague());
         pigeonDto.setCouleur(pigeon.getCouleur());
         pigeonDto.setAge(pigeon.getAge());
-        pigeonDto.setEleveurId(pigeon.getEleveurId());
+        pigeonDto.setEleveurId(pigeon.getEleveur().getId());
         return pigeonDto;
     }
+
 
     public Pigeon toEntity() {
         Pigeon pigeon = new Pigeon();
@@ -48,7 +44,6 @@ public class PigeonDto {
         pigeon.setNumeroBague(this.numeroBague);
         pigeon.setCouleur(this.couleur);
         pigeon.setAge(this.age);
-        pigeon.setEleveurId(this.eleveurId);
         return pigeon;
     }
 }

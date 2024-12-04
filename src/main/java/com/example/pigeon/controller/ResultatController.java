@@ -61,7 +61,7 @@ public class ResultatController {
 //        return new ResponseEntity<>(resultats, HttpStatus.CREATED);
 //    }
     @PostMapping("/{competitionId}/uploadResults")
-    public String uploadResultsFile(@PathVariable String competitionId, @RequestParam("file") MultipartFile file) {
+    public String uploadResultsFile(@PathVariable Long competitionId, @RequestParam("file") MultipartFile file) {
         try {
             resultatService.uploadResultsFile(competitionId, file);
             return "Results uploaded successfully!";
@@ -76,7 +76,7 @@ public class ResultatController {
 
 
     @GetMapping("/{competitionId}")
-    public ResponseEntity<List<ResultatDto>> getResultsByCompetitionId(@PathVariable String competitionId) {
+    public ResponseEntity<List<ResultatDto>> getResultsByCompetitionId(@PathVariable Long competitionId) {
         List<ResultatDto> resultats = resultatService.getResultsByCompetitionId(competitionId);
         if (resultats.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -86,7 +86,7 @@ public class ResultatController {
 
 
     @PatchMapping("/cloture/{competitionId}")
-    public ResponseEntity<String> cloturerCompetition(@PathVariable String competitionId, HttpSession session) {
+    public ResponseEntity<String> cloturerCompetition(@PathVariable Long competitionId, HttpSession session) {
         // System.out.println("salma");
         String userId = (String) session.getAttribute("utilisateurId");
         if (userId == null) {

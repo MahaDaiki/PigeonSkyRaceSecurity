@@ -1,5 +1,6 @@
 package com.example.pigeon.entity;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -14,54 +15,50 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@Document(collection = "competitions")
+@Entity
 public class Competition {
+    @jakarta.persistence.Id
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Getter
-    @Setter
     @NotBlank(message = "Le nom de la course ne peut pas être vide")
     private String nomCourse;
 
 
-    @Getter
-    @Setter
     @NotNull(message = "Les coordonnées GPS du point de lâcher ne peuvent pas être nulles")
     private double latitudeLacher;
 
-    @Getter
-    @Setter
     @NotNull(message = "Les coordonnées GPS du point de lâcher ne peuvent pas être nulles")
     private double longitudeLacher;
 
-    @Getter
-    @Setter
     @NotNull(message = "La date et l'heure de départ ne peuvent pas être nulles")
     private LocalDateTime dateHeureDepart;
 
-    @Getter
-    @Setter
     @NotNull(message = "La distance prévisionnelle ne peut pas être nulle")
     private double distancePrevisionnelle;
 
-    @Getter
-    @Setter
     private String season;
 
-    @Getter
-    @Setter
-    private Boolean estTermine;
-    @Getter
-    @Setter
-    @DBRef
 
+    private Boolean estTermine;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "competition_pigeon",
+            joinColumns = @JoinColumn(name = "competition_id"),
+            inverseJoinColumns = @JoinColumn(name = "pigeon_id")
+    )
     private List<Pigeon> pigeons;
+
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
+    private List<Resultat> resultats;
 
 
     public Competition() {}
 
-    public Competition(String nomCourse, double latitudeLacher, double longitudeLacher, LocalDateTime dateHeureDepart, double distancePrevisionnelle, String season, Boolean estTermine , List<Pigeon> pigeons) {
+    public Competition(String nomCourse, double latitudeLacher, double longitudeLacher, LocalDateTime dateHeureDepart, double distancePrevisionnelle, String season, Boolean estTermine , List<Resultat> resultats) {
         this.nomCourse = nomCourse;
         this.latitudeLacher = latitudeLacher;
         this.longitudeLacher = longitudeLacher;
@@ -69,6 +66,8 @@ public class Competition {
         this.distancePrevisionnelle = distancePrevisionnelle;
         this.season = season;
         this.estTermine = estTermine;
-        this.pigeons = pigeons;
+        this.resultats = resultats;
     }
+
+
 }

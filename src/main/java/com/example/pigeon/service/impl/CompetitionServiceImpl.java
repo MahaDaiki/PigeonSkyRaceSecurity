@@ -25,7 +25,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public CompetitionDto addCompetition(CompetitionDto competitionDto) {
-        List<String> pigeonIds = competitionDto.getPigeonIds();
+        List<Long> pigeonIds = competitionDto.getPigeonIds();
         if (pigeonIds != null && !pigeonIds.isEmpty()) {
             List<Pigeon> existingPigeons = pigeonService.getPigeonsByIds(pigeonIds);
 
@@ -58,14 +58,14 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public CompetitionDto getCompetitionById(String id) {
+    public CompetitionDto getCompetitionById(Long id) {
         Competition competition = competitionRepository.findById(id).orElse(null);
         return competition != null ? CompetitionDto.toDto(competition) : null;
     }
 
 
     @Override
-    public CompetitionDto modifyStatus(String id, Boolean estTermine) {
+    public CompetitionDto modifyStatus(Long id, Boolean estTermine) {
         try {
             Competition competition = competitionRepository.findById(id).orElseThrow(() -> new RuntimeException("Competition not found with id: " + id));
             competition.setEstTermine(estTermine);

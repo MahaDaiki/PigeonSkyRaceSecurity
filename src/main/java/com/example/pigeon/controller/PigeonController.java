@@ -38,7 +38,7 @@ public class PigeonController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'eleveur' requis");
         }
         Pigeon pigeon = pigeonDto.toEntity();
-        pigeon.setEleveurId(userId);
+//        pigeon.setEleveurId(userId);
         pigeonService.addPigeon(PigeonDto.toDto(pigeon));
         return ResponseEntity.ok("Pigeon ajouté avec succès");
     }
@@ -53,7 +53,7 @@ public class PigeonController {
 
     @GetMapping("/user")
     public ResponseEntity<List<Pigeon>> getPigeonsByUserId(HttpSession session) {
-        String userId = (String) session.getAttribute("utilisateurId");
+        Long userId = (Long) session.getAttribute("utilisateurId");
 
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
