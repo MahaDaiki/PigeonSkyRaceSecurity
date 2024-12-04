@@ -5,5 +5,5 @@ import java.time.LocalDateTime;
 public interface CalculService {
 //    boolean modifyResultAndRecalculate(String competitionId, String pigeonId, LocalDateTime nouvelleHeureArrivee);
 
-    boolean cloturerCompetitionEtCalculer(String competitionId);
+    boolean cloturerCompetitionEtCalculer(Long competitionId);
 }

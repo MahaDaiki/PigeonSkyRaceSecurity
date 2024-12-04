@@ -36,19 +36,12 @@ public class PigeonServiceImpl implements PigeonService {
             throw new IllegalArgumentException("Le numéro de bague doit commencer par 'm' pour mâle ou 'f' pour femelle");
         }
 
-        Pigeon savedPigeon = pigeonRepository.save(pigeon);
-
-        String eleveurId = pigeon.getEleveurId();
-        Utilisateur utilisateur = utilisateurRepository.findById(eleveurId)
+        Utilisateur eleveur = utilisateurRepository.findById(pigeonDto.getEleveurId())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        if (utilisateur.getPigeons() != null) {
-            utilisateur.getPigeons().add(savedPigeon);
-        } else {
-            utilisateur.setPigeons(List.of(savedPigeon));
-        }
 
-        utilisateurRepository.save(utilisateur);
+        pigeon.setEleveur(eleveur);
+        Pigeon savedPigeon = pigeonRepository.save(pigeon);
 
         return PigeonDto.toDto(savedPigeon);
     }
@@ -59,12 +52,12 @@ public class PigeonServiceImpl implements PigeonService {
     }
 
     @Override
-    public List<Pigeon> getPigeonsByUserId(String eleveurId) {
+    public List<Pigeon> getPigeonsByUserId(Long eleveurId) {
         return pigeonRepository.findByEleveurId(eleveurId);
     }
 
     @Override
-    public List<Pigeon> getPigeonsByIds(List<String> pigeonIds) {
+    public List<Pigeon> getPigeonsByIds(List<Long> pigeonIds) {
         return pigeonRepository.findAllById(pigeonIds);
     }
 

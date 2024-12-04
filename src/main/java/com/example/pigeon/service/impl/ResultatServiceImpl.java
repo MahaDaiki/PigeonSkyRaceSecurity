@@ -40,34 +40,10 @@ public class ResultatServiceImpl implements ResultatService {
     private PigeonService pigeonService;
 
 
-//    @Override
-//    public List<ResultatDto> createResultsForCompetition(String competitionId, List<ResultatDto> resultatDtos) {
-//        Competition competition = competitionRepository.findById(competitionId).orElse(null);
-//        if (competition == null || competition.getPigeons() == null) {
-//            return new ArrayList<>();
-//        }
-//
-//        List<ResultatDto> createdResults = new ArrayList<>();
-//        for (ResultatDto resultatDto : resultatDtos) {
-//            Resultat resultat = new Resultat();
-//            resultat.setCompetitionId(competitionId);
-//            resultat.setPigeonId(resultatDto.getPigeonId());
-//            resultat.setDistanceParcourue(0);
-//            resultat.setVitesse(0);
-//            resultat.setTempsParcourue(null);
-//            resultat.setHeureArrivee(resultatDto.getHeureArrivee());
-//            resultat.setPoint(0);
-//
-//            Resultat savedResultat = resultatRepository.save(resultat);
-//            createdResults.add(ResultatDto.toDto(savedResultat));
-//        }
-//
-//        return createdResults;
-//    }
 
 
     @Override
-    public List<ResultatDto> getResultsByCompetitionId(String competitionId) {
+    public List<ResultatDto> getResultsByCompetitionId(Long competitionId) {
         List<Resultat> resultats = resultatRepository.findByCompetitionId(competitionId);
         List<ResultatDto> resultatDtos = new ArrayList<>();
         for (Resultat resultat : resultats) {
@@ -77,7 +53,7 @@ public class ResultatServiceImpl implements ResultatService {
     }
 
     @Override
-    public void uploadResultsFile(String competitionId, MultipartFile file) {
+    public void uploadResultsFile(Long competitionId, MultipartFile file) {
         Competition competition = competitionRepository.findById(competitionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Competition not found"));
 

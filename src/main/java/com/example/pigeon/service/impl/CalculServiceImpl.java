@@ -40,7 +40,7 @@ public class CalculServiceImpl implements CalculService {
     private UtilisateurRepository utilisateurRepository;
 
     @Override
-    public boolean cloturerCompetitionEtCalculer(String competitionId) {
+    public boolean cloturerCompetitionEtCalculer(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId)
                 .orElseThrow(() -> new RuntimeException("Compétition non trouvée"));
 
@@ -51,21 +51,23 @@ public class CalculServiceImpl implements CalculService {
 
         try {
             resultats.forEach(resultat -> {
-                Utilisateur utilisateur = utilisateurRepository.findByPigeonId(resultat.getPigeonId())
-                        .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé pour le pigeon : " + resultat.getPigeonId()));
+
+                Utilisateur utilisateur = utilisateurRepository.findByPigeonId(resultat.getPigeon().getId())
+                        .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé pour le pigeon : " + resultat.getPigeon().getId()));
 
                 double distanceParcourue = calculerDistanceHaversine(competition.getLatitudeLacher(), competition.getLongitudeLacher(), utilisateur.getLatitude(), utilisateur.getLongitude());
 
                 Duration dureeParcourue = Duration.between(competition.getDateHeureDepart(), resultat.getHeureArrivee());
                 double vitesse = calculerVitesse(distanceParcourue, dureeParcourue);
 
+
                 resultat.setDistanceParcourue(distanceParcourue);
                 resultat.setVitesse(vitesse);
                 resultat.setTempsParcourue(dureeParcourue);
 
+
                 resultatRepository.save(resultat);
             });
-
             resultats.sort((r1, r2) -> r1.getHeureArrivee().compareTo(r2.getHeureArrivee()));
 
             int totalPigeons = resultats.size();
@@ -127,7 +129,7 @@ public class CalculServiceImpl implements CalculService {
                     .filter(resultat -> resultat.getClassement() != 0)
                     .forEach(resultat -> {
                         table.addCell(new Cell().add(new Paragraph(String.valueOf(resultat.getClassement()))));
-                        table.addCell(new Cell().add(new Paragraph(resultat.getPigeonId())));
+                        table.addCell(new Cell().add(new Paragraph(String.valueOf(resultat.getPigeon().getId()))));
                         table.addCell(new Cell().add(new Paragraph(resultat.getHeureArrivee().toString())));
                         table.addCell(new Cell().add(new Paragraph(String.format("%.2f", resultat.getDistanceParcourue()))));
                         table.addCell(new Cell().add(new Paragraph(String.format("%.2f", resultat.getVitesse()))));

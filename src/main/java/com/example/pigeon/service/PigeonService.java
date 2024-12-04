@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface PigeonService {
      PigeonDto  addPigeon(PigeonDto pigeonDto);
      List<Pigeon> getAllPigeons();
-     List<Pigeon> getPigeonsByUserId(String eleveurId);
-     List<Pigeon> getPigeonsByIds(List<String> pigeonIds);
+     List<Pigeon> getPigeonsByUserId(Long eleveurId);
+     List<Pigeon> getPigeonsByIds(List<Long> pigeonIds);
      Optional<Pigeon> findPigeonByNumeroBague(String numeroBague);
 }

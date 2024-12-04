@@ -2,6 +2,7 @@ package com.example.pigeon.dto;
 
 import com.example.pigeon.entity.Competition;
 import com.example.pigeon.entity.Pigeon;
+import com.example.pigeon.entity.Resultat;
 import com.example.pigeon.service.PigeonService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 
 public class CompetitionDto {
-    private String id;
+    private long id;
 
     @NotBlank(message = "Le nom de la course ne peut pas être vide")
     private String nomCourse;
@@ -39,10 +40,11 @@ public class CompetitionDto {
     private String season;
     private Boolean estTermine;
 
-    @JsonProperty("pigeons")
-    private List<String> pigeonIds;
+    @JsonProperty("resultats")
+    private List<ResultatDto> resultats;
 
 
+    private List<Long> pigeonIds;
 
     public static CompetitionDto toDto(Competition entity) {
         CompetitionDto dto = new CompetitionDto();
@@ -54,13 +56,19 @@ public class CompetitionDto {
         dto.setDistancePrevisionnelle(entity.getDistancePrevisionnelle());
         dto.setSeason(entity.getSeason());
         dto.setEstTermine(entity.getEstTermine());
-        dto.setPigeonIds(entity.getPigeons() != null
-                ? entity.getPigeons().stream()
-                .map(pigeon -> pigeon.getId())
+        dto.setResultats(entity.getResultats() != null
+                ? entity.getResultats().stream()
+                .map(ResultatDto::toDto)
                 .collect(Collectors.toList())
                 : null);
+        if (entity.getPigeons() != null) {
+            dto.setPigeonIds(entity.getPigeons().stream()
+                    .map(Pigeon::getId)
+                    .collect(Collectors.toList()));
+        }
         return dto;
     }
+
 
     public Competition toEntity(List<Pigeon> existingPigeons) {
         Competition competition = new Competition();
@@ -73,16 +81,11 @@ public class CompetitionDto {
         competition.setSeason(this.season);
         competition.setEstTermine(this.estTermine);
 
-        if (this.pigeonIds != null) {
+
+
+        if (existingPigeons != null) {
             competition.setPigeons(existingPigeons);
-        } else {
-            competition.setPigeons(new ArrayList<>());
         }
-
         return competition;
-    }
-
-    public void setMessage(String s) {
-
     }
 }

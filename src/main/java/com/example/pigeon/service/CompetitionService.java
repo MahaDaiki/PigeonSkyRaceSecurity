@@ -5,7 +5,7 @@ import com.example.pigeon.entity.Competition;
 
 public interface CompetitionService {
     CompetitionDto addCompetition(CompetitionDto competitionDto);
-    CompetitionDto getCompetitionById(String id);
-    CompetitionDto modifyStatus(String id, Boolean estTermine);
+    CompetitionDto getCompetitionById(Long id);
+    CompetitionDto modifyStatus(Long id, Boolean estTermine);
 
 }
