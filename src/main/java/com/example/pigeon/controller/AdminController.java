@@ -17,7 +17,7 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-    // Endpoint to retrieve all users, accessible only by admin
+
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UtilisateurDto>> getAllUtilisateurs() {
