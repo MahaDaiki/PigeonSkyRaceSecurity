@@ -34,7 +34,7 @@ public class PigeonController {
        Role role = (Role) session.getAttribute("utilisateurRole");
         System.out.println("Role: " + role);
 
-        if (role != Role.eleveur) {
+        if (role != Role.ROLE_USER) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'eleveur' requis");
         }
         Pigeon pigeon = pigeonDto.toEntity();
