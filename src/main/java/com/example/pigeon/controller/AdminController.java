@@ -19,7 +19,7 @@ public class AdminController {
 
 
     @GetMapping("/users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UtilisateurDto>> getAllUtilisateurs() {
         List<UtilisateurDto> utilisateurs = userService.getAllUtilisateurs()
                 .stream()
@@ -30,10 +30,10 @@ public class AdminController {
 
 
     @PutMapping("/users/{userId}/role")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UtilisateurDto> changeUserRole(
             @PathVariable Long userId,
-            @RequestParam Role newRole) {
+            @RequestBody Role newRole) {
         UtilisateurDto updatedUser = userService.changeUserRole(userId, newRole);
         return ResponseEntity.ok(updatedUser);
     }
