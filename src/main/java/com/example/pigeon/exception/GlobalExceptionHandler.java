@@ -1,5 +1,6 @@
 package com.example.pigeon.exception;
 
+import com.example.pigeon.dto.ErrorResponse;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.http.HttpStatus;
@@ -7,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -63,18 +63,33 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
-                "Access Denied.",
-                HttpStatus.FORBIDDEN.value(),
-                "ACCESS_DENIED",
-                "You do not have permission to access this resource.",
+                ex.getMessage(),
+                HttpStatus.CONFLICT.value(),
+                "USERNAME_ALREADY_EXISTS",
+                "The username provided is already taken.",
                 request.getDescription(false)
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+
+
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+//        ErrorResponse errorResponse = new ErrorResponse(
+//                LocalDateTime.now(),
+//                "Access Denied.",
+//                HttpStatus.FORBIDDEN.value(),
+//                "ACCESS_DENIED",
+//                "You do not have permission to access this resource.",
+//                request.getDescription(false)
+//        );
+//        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+//    }
 
 
 
