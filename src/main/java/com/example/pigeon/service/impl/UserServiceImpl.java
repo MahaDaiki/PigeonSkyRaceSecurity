@@ -7,6 +7,7 @@
     import com.example.pigeon.repository.UtilisateurRepository;
     import com.example.pigeon.service.UserService;
     import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
 
@@ -31,10 +32,11 @@
                 throw new ResourceNotFoundException("Un éleveur avec ce nom de colombier existe déjà");
             }
             if (userDto.getRole() == null) {
-                userDto.setRole(Role.ROLE_USER);
+                userDto.setRole(Role.USER);
             }
             Utilisateur utilisateur = userDto.toEntity();
-            utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
+            var bCryptEncoder = new BCryptPasswordEncoder();
+            utilisateur.setMotDePasse(bCryptEncoder.encode(utilisateur.getMotDePasse()));
             Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
             return UtilisateurDto.toDto(savedUtilisateur);
         }

@@ -1,28 +1,24 @@
 package com.example.pigeon.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
+
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 public class ErrorResponse {
 
     private LocalDateTime timestamp;
     private String message;
     private int status;
+    private String errorCode;
+    private String errorDescription;
+    private String path;
 
-    public ErrorResponse(LocalDateTime timestamp,int status , String message) {
-        this.timestamp = timestamp;
-        this.status = status;
-        this.message = message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }

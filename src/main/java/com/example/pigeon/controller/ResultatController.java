@@ -94,7 +94,7 @@ public class ResultatController {
         }
 
         Role role = (Role) session.getAttribute("utilisateurRole");
-        if (role != Role.ROLE_ORGANIZER) {
+        if (role != Role.ORGANIZER) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'organisateur' requis");
         }
 
