@@ -35,7 +35,7 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UtilisateurDto> registerUtilisateur(@RequestBody @Valid UtilisateurDto user) {
-        user.setMotDePasse(passwordEncoder.encode(user.getMotDePasse()));
+
         UtilisateurDto registeredUtilisateur = userService.registerUtilisateur(user);
         return new ResponseEntity<>(registeredUtilisateur, HttpStatus.CREATED);
     }
@@ -47,8 +47,6 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getMotDePasse())
             );
-
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             return ResponseEntity.ok("User logged in successfully: " + authentication.getName());

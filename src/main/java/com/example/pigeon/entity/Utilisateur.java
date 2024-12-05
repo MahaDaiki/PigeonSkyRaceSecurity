@@ -42,7 +42,7 @@ public class Utilisateur {
 
     private double longitude;
 
-    @NotBlank(message = "Ou est le roooole ?????")
+//    @NotBlank(message = "Ou est le roooole ?????")
     private Role role;
 
 

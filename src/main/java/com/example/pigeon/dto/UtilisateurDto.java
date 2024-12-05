@@ -24,7 +24,7 @@ public class UtilisateurDto {
     @NotNull(message = "Le mot de passe ne peut pas être vide.")
     private String motDePasse;
 
-    @NotNull(message = "Le rôle ne peut pas être vide.")
+//    @NotNull(message = "Le rôle ne peut pas être vide.")
     private Role role;
 
     public static UtilisateurDto toDto(Utilisateur entity) {
