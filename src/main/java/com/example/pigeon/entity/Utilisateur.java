@@ -42,6 +42,7 @@ public class Utilisateur {
 
     private double longitude;
 
+    @Enumerated(EnumType.STRING)
 //    @NotBlank(message = "Ou est le roooole ?????")
     private Role role;
 

@@ -13,6 +13,7 @@
     import org.springframework.stereotype.Service;
 
     import java.util.List;
+    import java.util.Optional;
 
     @Service
     public class UserServiceImpl implements UserService {
@@ -32,7 +33,7 @@
                 throw new UsernameAlreadyExistsException("Username '" + userDto.getUsername() + "' already exists.");
             }
             if (userDto.getRole() == null) {
-                userDto.setRole(Role.USER);
+                userDto.setRole(Role.ROLE_USER);
             }
             Utilisateur utilisateur = userDto.toEntity();
             var bCryptEncoder = new BCryptPasswordEncoder();
@@ -57,4 +58,11 @@
 
             return UtilisateurDto.toDto(utilisateur);
         }
+
+        @Override
+        public Optional<Utilisateur> findById(Long userId) {
+            return utilisateurRepository.findById(userId);
+        }
+
+
     }

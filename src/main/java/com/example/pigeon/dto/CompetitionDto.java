@@ -80,9 +80,6 @@ public class CompetitionDto {
         competition.setDistancePrevisionnelle(this.distancePrevisionnelle);
         competition.setSeason(this.season);
         competition.setEstTermine(this.estTermine);
-
-
-
         if (existingPigeons != null) {
             competition.setPigeons(existingPigeons);
         }

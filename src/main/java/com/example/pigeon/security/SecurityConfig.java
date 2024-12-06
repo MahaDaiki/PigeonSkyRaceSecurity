@@ -29,7 +29,8 @@ public class SecurityConfig {
     CustomAccessDeniedHandler customAccessDeniedHandler;
     @Autowired
     CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -41,6 +42,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers("/api/users/{userId}/role","/api/admin/users").hasRole("ADMIN")
+                        .requestMatchers("/api/competition/add", "/api/competition/**", "/api/resultats/**").hasAnyRole("ORGANIZER", "ADMIN")
+                        .requestMatchers("/api/pigeons/add").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

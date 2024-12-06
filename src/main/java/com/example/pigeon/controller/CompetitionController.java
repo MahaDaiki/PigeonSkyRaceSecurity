@@ -13,6 +13,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,20 +27,12 @@ public class CompetitionController {
     CompetitionService competitionService;
     @Autowired
     private PigeonService pigeonService;
+
+
+    @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<String> addCompetition(@RequestBody CompetitionDto competitionDto, HttpSession session) {
+    public ResponseEntity<String> addCompetition(@RequestBody CompetitionDto competitionDto) {
         System.out.println("Received CompetitionDto: " + competitionDto);
-        Long userId = (Long) session.getAttribute("utilisateurId");
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié");
-        }
-
-        Role role = (Role) session.getAttribute("utilisateurRole");
-        if (role != Role.ORGANIZER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'organisateur' requis");
-        }
-
-
         List<Long> pigeonIds = competitionDto.getPigeonIds();
         System.out.println("Pigeon IDs requested: " + pigeonIds);
 
@@ -76,26 +69,12 @@ public class CompetitionController {
         }
     }
 
+    @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
     @PatchMapping("/{id}/status")
     public ResponseEntity<String> modifyStatus(
             @PathVariable Long id,
-            @RequestBody CompetitionRequestDto requestDto,
-            HttpSession session) {
-
-
+            @RequestBody CompetitionRequestDto requestDto) {
         System.out.println("Received request to update status for competition ID: " + id + " with estTermine: " + requestDto.getEstTermine());
-
-
-        Long userId = (Long) session.getAttribute("utilisateurId");
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié");
-        }
-
-        Role role = (Role) session.getAttribute("utilisateurRole");
-        if (role != Role.ORGANIZER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'organisateur' requis");
-        }
-
 
         Boolean estTermine = requestDto.getEstTermine();
         System.out.println("Updating status for competition ID: " + id + " to estTermine: " + estTermine);

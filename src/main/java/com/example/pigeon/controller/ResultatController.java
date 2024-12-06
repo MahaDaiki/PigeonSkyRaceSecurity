@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,6 +61,8 @@ public class ResultatController {
 //        }
 //        return new ResponseEntity<>(resultats, HttpStatus.CREATED);
 //    }
+
+    @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
     @PostMapping("/{competitionId}/uploadResults")
     public String uploadResultsFile(@PathVariable Long competitionId, @RequestParam("file") MultipartFile file) {
         try {
@@ -75,6 +78,7 @@ public class ResultatController {
     }
 
 
+    @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
     @GetMapping("/{competitionId}")
     public ResponseEntity<List<ResultatDto>> getResultsByCompetitionId(@PathVariable Long competitionId) {
         List<ResultatDto> resultats = resultatService.getResultsByCompetitionId(competitionId);
@@ -85,20 +89,9 @@ public class ResultatController {
     }
 
 
+    @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
     @PatchMapping("/cloture/{competitionId}")
-    public ResponseEntity<String> cloturerCompetition(@PathVariable Long competitionId, HttpSession session) {
-        // System.out.println("salma");
-        String userId = (String) session.getAttribute("utilisateurId");
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié");
-        }
-
-        Role role = (Role) session.getAttribute("utilisateurRole");
-        if (role != Role.ORGANIZER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'organisateur' requis");
-        }
-
-
+    public ResponseEntity<String> cloturerCompetition(@PathVariable Long competitionId) {
         boolean success = calculService.cloturerCompetitionEtCalculer(competitionId);
         if (success) {
             return ResponseEntity.ok("Compétition clôturée avec succès, calculs appliqués.");
