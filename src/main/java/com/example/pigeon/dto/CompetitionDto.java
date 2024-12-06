@@ -4,6 +4,7 @@ import com.example.pigeon.entity.Competition;
 import com.example.pigeon.entity.Pigeon;
 import com.example.pigeon.entity.Resultat;
 import com.example.pigeon.service.PigeonService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,9 +42,10 @@ public class CompetitionDto {
     private Boolean estTermine;
 
     @JsonProperty("resultats")
+    @JsonIgnore
     private List<ResultatDto> resultats;
 
-
+    @JsonProperty("pigeonIds")
     private List<Long> pigeonIds;
 
     public static CompetitionDto toDto(Competition entity) {
