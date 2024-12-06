@@ -29,11 +29,11 @@ public class SecurityConfig {
     CustomAccessDeniedHandler customAccessDeniedHandler;
     @Autowired
     CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    @Autowired
-    AuthenticationManager authenticationManager;
 
-
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,7 +45,6 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(customAuthenticationProvider)
-                .authenticationManager(authenticationManager)
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(customAccessDeniedHandler)
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
@@ -53,6 +52,9 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
+
+
+
 
 
 
