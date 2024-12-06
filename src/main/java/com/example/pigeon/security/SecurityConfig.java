@@ -3,6 +3,8 @@ package com.example.pigeon.security;
 
 
 import com.example.pigeon.exception.CustomAccessDeniedHandler;
+import com.example.pigeon.exception.CustomAuthenticationEntryPoint;
+import com.example.pigeon.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +27,13 @@ public class SecurityConfig {
    CustomAuthenticationProvider customAuthenticationProvider;
     @Autowired
     CustomAccessDeniedHandler customAccessDeniedHandler;
+    @Autowired
+    CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,15 +46,16 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(customAuthenticationProvider)
                 .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(customAccessDeniedHandler))
-                    .httpBasic(Customizer.withDefaults());
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+
+
+
 
 
 

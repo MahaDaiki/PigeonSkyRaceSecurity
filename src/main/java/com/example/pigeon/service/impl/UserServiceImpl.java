@@ -4,6 +4,7 @@
     import com.example.pigeon.entity.Role;
     import com.example.pigeon.entity.Utilisateur;
     import com.example.pigeon.exception.ResourceNotFoundException;
+    import com.example.pigeon.exception.UsernameAlreadyExistsException;
     import com.example.pigeon.repository.UtilisateurRepository;
     import com.example.pigeon.service.UserService;
     import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,7 @@
         @Autowired
         private UtilisateurRepository utilisateurRepository;
 
-        @Autowired
-        private PasswordEncoder passwordEncoder;
+
 
         public Utilisateur findByUsernameAndMotDePasse(String username, String motDePasse) {
             return utilisateurRepository.findByUsernameAndMotDePasse(username, motDePasse);
@@ -29,7 +29,7 @@
         @Override
         public UtilisateurDto registerUtilisateur(UtilisateurDto userDto) {
             if (utilisateurRepository.findByUsername(userDto.getUsername()).isPresent()) {
-                throw new ResourceNotFoundException("Un éleveur avec ce nom de colombier existe déjà");
+                throw new UsernameAlreadyExistsException("Username '" + userDto.getUsername() + "' already exists.");
             }
             if (userDto.getRole() == null) {
                 userDto.setRole(Role.USER);

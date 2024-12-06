@@ -1,4 +1,4 @@
-package com.example.pigeon.exception;
+package com.example.pigeon.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
