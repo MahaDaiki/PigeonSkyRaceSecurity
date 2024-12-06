@@ -1,5 +1,6 @@
 package com.example.pigeon.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -53,6 +54,7 @@ public class Competition {
     private List<Pigeon> pigeons;
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Resultat> resultats;
 
 

@@ -41,22 +41,12 @@ public class CompetitionController {
             return ResponseEntity.badRequest().body("La liste des IDs de pigeon est vide");
         }
 
-
-        List<Pigeon> existingPigeons = pigeonService.getPigeonsByIds(pigeonIds);
-        System.out.println("Found pigeons: " + existingPigeons);
-
-
-        if (existingPigeons.size() != pigeonIds.size()) {
-            return ResponseEntity.badRequest().body("Un ou plusieurs IDs de pigeon sont invalides");
+        try {
+            CompetitionDto savedCompetitionDto = competitionService.addCompetition(competitionDto);
+            return ResponseEntity.ok("Compétition ajoutée avec succès");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-
-        Competition competition = competitionDto.toEntity(existingPigeons);
-
-        System.out.println("Competition with pigeons: " + competition);
-
-        CompetitionDto savedCompetitionDto = competitionService.addCompetition(competitionDto);
-        return ResponseEntity.ok("Compétition ajoutée avec succès");
     }
 
     @GetMapping("/{id}")
