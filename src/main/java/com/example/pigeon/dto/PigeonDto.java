@@ -4,6 +4,7 @@ import com.example.pigeon.entity.Pigeon;
 import com.example.pigeon.entity.Utilisateur;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Data
@@ -12,7 +13,9 @@ import lombok.*;
 public class PigeonDto {
     private long  id;
 
+
     @NotBlank(message = " Le numéro de bague ne peut pas être vide")
+    @Pattern(regexp = "^[mf].*", message = "Le numéro de bague doit commencer par 'm' pour mâle ou 'f' pour femelle")
     private String numeroBague;
 
     @NotBlank(message = "La couleur ne peut pas être vide")

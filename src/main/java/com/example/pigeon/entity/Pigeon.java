@@ -22,7 +22,9 @@ public class Pigeon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @NotBlank(message = "Le numéro de bague ne peut pas être vide")
+    @Column(nullable = false, unique = true)
     @Pattern(regexp = "^[mf].*", message = "Le numéro de bague doit commencer par 'm' pour mâle ou 'f' pour femelle")
     private String numeroBague;
 
@@ -30,7 +32,7 @@ public class Pigeon {
     private String couleur;
 
 
-    @NotBlank(message = "L'age ne peut pas être vide")
+    @NotNull(message = "L'age ne peut pas être vide")
     private int age;
 
 
