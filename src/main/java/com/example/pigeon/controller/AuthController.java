@@ -3,6 +3,7 @@ package com.example.pigeon.controller;
 import com.example.pigeon.dto.LoginRequestDto;
 import com.example.pigeon.dto.UtilisateurDto;
 import com.example.pigeon.entity.Utilisateur;
+import com.example.pigeon.exception.EmptyException;
 import com.example.pigeon.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -35,6 +36,12 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UtilisateurDto> registerUtilisateur(@RequestBody @Valid UtilisateurDto user) {
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            throw new EmptyException("Username cannot be null or empty.");
+        }
+        if (user.getMotDePasse() == null || user.getMotDePasse().trim().isEmpty()) {
+            throw new EmptyException("Password cannot be null or empty.");
+        }
 
         UtilisateurDto registeredUtilisateur = userService.registerUtilisateur(user);
         return new ResponseEntity<>(registeredUtilisateur, HttpStatus.CREATED);

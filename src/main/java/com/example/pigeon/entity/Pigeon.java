@@ -39,6 +39,7 @@ public class Pigeon {
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id")
+    @JsonIgnore
     private Utilisateur eleveur;
 
     @OneToMany(mappedBy = "pigeon", cascade = CascadeType.ALL)

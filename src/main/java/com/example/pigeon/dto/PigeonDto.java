@@ -2,6 +2,7 @@ package com.example.pigeon.dto;
 
 import com.example.pigeon.entity.Pigeon;
 import com.example.pigeon.entity.Utilisateur;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -25,6 +26,7 @@ public class PigeonDto {
     private int age;
 
     @NotNull(message = "L'ID de l'éleveur ne peut pas être nul")
+    @JsonIgnore
     private Long eleveurId;
 
 
