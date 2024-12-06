@@ -33,6 +33,7 @@ public class Utilisateur {
 
 
     @NotNull(message = "Le mot de passe ne peut pas être nul")
+    @Column(nullable = false)
     private String motDePasse;
 
     @NotBlank(message = "Le nom ne peut pas être vide")

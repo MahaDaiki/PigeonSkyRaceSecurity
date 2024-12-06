@@ -77,6 +77,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(EmptyException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyUsernameException(EmptyException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                "USERNAME_EMPTY",
+                "The field is required and cannot be empty.",
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
 //    @ExceptionHandler(AccessDeniedException.class)
 //    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
