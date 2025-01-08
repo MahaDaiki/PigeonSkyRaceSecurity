@@ -5,8 +5,10 @@ import com.example.pigeon.dto.UtilisateurDto;
 import com.example.pigeon.entity.Utilisateur;
 import com.example.pigeon.exception.EmptyException;
 import com.example.pigeon.service.UserService;
+import com.example.pigeon.util.JwtUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +24,12 @@ import static org.bouncycastle.cms.RecipientId.password;
 
 @RestController
 @RequestMapping("/api/auth")
+@AllArgsConstructor
 public class AuthController {
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -50,14 +48,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto loginRequest) {
         try {
-
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getMotDePasse())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            return ResponseEntity.ok("User logged in successfully: " + authentication.getName());
+            String token = jwtUtil.generateToken(authentication.getName());
+            return ResponseEntity.ok("Bearer " + token);
         } catch (Exception e) {
+            System.out.println("Authentication failed for username: " + loginRequest.getUsername());
+            System.out.println("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }

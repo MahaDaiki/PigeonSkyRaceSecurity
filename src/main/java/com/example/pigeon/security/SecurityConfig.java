@@ -5,8 +5,10 @@ package com.example.pigeon.security;
 import com.example.pigeon.exception.CustomAccessDeniedHandler;
 import com.example.pigeon.exception.CustomAuthenticationEntryPoint;
 import com.example.pigeon.service.CustomUserDetailsService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import com.example.pigeon.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -16,20 +18,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-    @Autowired
-   CustomAuthenticationProvider customAuthenticationProvider;
-    @Autowired
-    CustomAccessDeniedHandler customAccessDeniedHandler;
-    @Autowired
-    CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private CustomAuthenticationProvider customAuthenticationProvider;
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private CustomUserDetailsService customUserDetailsService;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -52,7 +53,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
-                .httpBasic(Customizer.withDefaults());
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
