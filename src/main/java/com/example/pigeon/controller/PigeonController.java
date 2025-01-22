@@ -7,12 +7,14 @@ import com.example.pigeon.entity.Utilisateur;
 import com.example.pigeon.security.CustomUserDetails;
 import com.example.pigeon.service.PigeonService;
 import com.example.pigeon.service.UserService;
+import io.jsonwebtoken.Jwt;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,17 +52,16 @@ public class PigeonController {
         return ResponseEntity.ok(pigeons);
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<List<Pigeon>> getPigeonsByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-//    @GetMapping("/user")
-//    public ResponseEntity<List<Pigeon>> getPigeonsByUserId(HttpSession session) {
-//        Long userId = (Long) session.getAttribute("utilisateurId");
-//
-//        if (userId == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//
-//        List<Pigeon> pigeons = pigeonService.getPigeonsByUserId(userId);
-//        return ResponseEntity.ok(pigeons);
-//    }
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = authentication.getName();
+        List<Pigeon> pigeons = pigeonService.getPigeonsByUsername(username);
+        return ResponseEntity.ok(pigeons);
+    }
 
 }

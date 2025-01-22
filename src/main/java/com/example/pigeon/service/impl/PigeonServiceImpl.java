@@ -6,7 +6,6 @@ import com.example.pigeon.entity.Utilisateur;
 import com.example.pigeon.repository.PigeonRepository;
 import com.example.pigeon.repository.UtilisateurRepository;
 import com.example.pigeon.service.PigeonService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +63,11 @@ public class PigeonServiceImpl implements PigeonService {
     @Override
     public Optional<Pigeon> findPigeonByNumeroBague(String numeroBague) {
         return pigeonRepository.findByNumeroBague(numeroBague);
+    }
+
+    @Override
+    public List<Pigeon> getPigeonsByUsername(String username) {
+        return pigeonRepository.findByEleveurUsername(username);
     }
 
 

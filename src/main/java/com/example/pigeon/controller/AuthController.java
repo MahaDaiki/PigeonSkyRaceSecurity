@@ -53,7 +53,7 @@ public class AuthController {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtUtil.generateToken(authentication.getName());
-            return ResponseEntity.ok("Bearer " + token);
+            return ResponseEntity.ok(token);
         } catch (Exception e) {
             System.out.println("Authentication failed for username: " + loginRequest.getUsername());
             System.out.println("Error: " + e.getMessage());
